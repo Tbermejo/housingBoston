@@ -4,6 +4,9 @@ import gzip
 import pickle
 import os
 from sklearn.kernel_ridge import KernelRidge
+from sklearn.linear_model import ElasticNet, Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
 
 
 # Función para cargar el modelo entrenado
@@ -58,19 +61,20 @@ st.write(
 st.sidebar.header("📊 Parámetros del Modelo")
 
 if modelo is not None:
-    st.sidebar.write(f"📌 **Tipo de modelo:** {type(modelo).__name__}")  # Mostrar tipo de modelo
+    modelo_tipo = type(modelo).__name__  # Obtener tipo de modelo
+    st.sidebar.write(f"📌 **Tipo de modelo:** {modelo_tipo}")
 
     try:
-        # Verificar si es un modelo de Kernel Ridge
-        if isinstance(modelo, KernelRidge):
-            st.sidebar.write("### 🔧 Hiperparámetros Ajustados:")
-            st.sidebar.write(f"🔹 **Alpha:** {modelo.alpha}")
-            st.sidebar.write(f"🔹 **Kernel:** {modelo.kernel}")
-        else:
-            st.sidebar.warning("⚠️ Este modelo no tiene coeficientes disponibles.")
+        # Obtener hiperparámetros del modelo
+        params = modelo.get_params()
+        st.sidebar.write("### 🔧 Hiperparámetros Ajustados:")
+        
+        for key, value in params.items():
+            st.sidebar.write(f"🔹 **{key}:** {value}")
     
     except Exception as e:
-        st.sidebar.error(f"⚠️ Error al obtener los parámetros del modelo: {e}")
+        st.sidebar.error(f"⚠️ Error al obtener los hiperparámetros del modelo: {e}")
+
 else:
     st.sidebar.warning("⚠️ Modelo no cargado. No se pueden mostrar los parámetros.")
 
