@@ -36,3 +36,6 @@ if st.button("Predecir Precio"):
     entrada = np.array(valores_usuario).reshape(1, -1)  # Convertir en array 2D
     prediccion = modelo.predict(entrada)  # Hacer la predicción
     st.success(f"🏠 Precio estimado: ${prediccion[0] * 1000:,.2f}")  # Formato en dólares
+
+if __name__ == "__main__":
+    main()
