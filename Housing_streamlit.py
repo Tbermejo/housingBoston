@@ -30,8 +30,8 @@ def load_model():
         return None
 
 # Cargar el modelo y obtener el MAE
-modelo_data = load_model()
-if modelo_data is not None:
+modelo = load_model()
+if modelo is not None:
     modelo = modelo_data["modelo"]
     mae = modelo_data.get("mae", "No disponible")  # Obtener MAE
 
@@ -147,7 +147,7 @@ if st.button("Predecir Precio"):
     if modelo is not None:
         entrada = np.array(valores_usuario).reshape(1, -1)
         try:
-            prediccion = modelo_data.predict(entrada)  # Hacer la predicción
+            prediccion = modelo.predict(entrada)  # Hacer la predicción
             st.success(f"🏠 Precio estimado: ${prediccion[0] * 1000:,.2f}")  # Formato en dólares
         except Exception as e:
             st.error(f"⚠️ Error al hacer la predicción: {e}")
