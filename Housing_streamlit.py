@@ -1,16 +1,22 @@
 import streamlit as st
-from PIL import Image
-from tensorflow.keras.preprocessing.image import img_to_array
 import numpy as np
 import gzip
 import pickle
 
-# Cargar el modelo entrenado
+# Función para cargar el modelo entrenado
+@st.cache_resource
 def load_model():
     filename = "model_trained_regressor.pkl.gz"
-    with gzip.open(filename, 'rb') as f:
-        modelo = pickle.load(f)
-    return modelo
+    try:
+        with gzip.open(filename, 'rb') as f:
+            modelo = pickle.load(f)
+        return modelo
+    except FileNotFoundError:
+        st.error("Error: No se encontró el archivo del modelo. Verifica la ruta.")
+        return None
+
+# Cargar el modelo al iniciar la aplicación
+modelo = load_model()
 
 # Definir los nombres de las variables del dataset
 column_names = [
@@ -33,9 +39,10 @@ for col in column_names:
 
 # Botón de predicción
 if st.button("Predecir Precio"):
-    entrada = np.array(valores_usuario).reshape(1, -1)  # Convertir en array 2D
-    prediccion = modelo.predict(entrada)  # Hacer la predicción
-    st.success(f"🏠 Precio estimado: ${prediccion[0] * 1000:,.2f}")  # Formato en dólares
+    if modelo is not None:  # Verificar si el modelo se cargó correctamente
+        entrada = np.array(valores_usuario).reshape(1, -1)  # Convertir en array 2D
+        prediccion = modelo.predict(entrada)  # Hacer la predicción
+        st.success(f"🏠 Precio estimado: ${prediccion[0] * 1000:,.2f}")  # Formato en dólares
+    else:
+        st.error("No se pudo hacer la predicción porque el modelo no está cargado.")
 
-if __name__ == "__main__":
-    main()
