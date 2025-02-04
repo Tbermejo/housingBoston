@@ -32,8 +32,12 @@ def load_model():
 # Cargar el modelo y obtener el MAE
 modelo = load_model()
 if modelo is not None:
-    modelo = modelo["modelo"]
-    mae = modelo.get("mae", "No disponible")  # Obtener MAE
+    if isinstance(modelo, dict):  # Si es un diccionario, extraer modelo y MAE
+        modelo_real = modelo["modelo"]
+        mae = modelo.get("mae", "No disponible")
+    else:  # Si no es un diccionario, asumir que es el modelo directamente
+        modelo_real = modelo
+        mae = "No disponible"
 
 # Definir nombres, descripciones y rangos de las variables
 variables_info = {
