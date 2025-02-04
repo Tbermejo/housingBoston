@@ -7,7 +7,7 @@ from sklearn.kernel_ridge import KernelRidge
 from sklearn.linear_model import ElasticNet, Ridge, Lasso
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
-
+from sklearn.pipeline import Pipeline
 
 # Función para cargar el modelo entrenado
 @st.cache_resource
@@ -61,12 +61,25 @@ st.write(
 st.sidebar.header("📊 Parámetros del Modelo")
 
 if modelo is not None:
-    modelo_tipo = type(modelo).__name__  # Obtener tipo de modelo
+    modelo_tipo = type(modelo).__name__
     st.sidebar.write(f"📌 **Tipo de modelo:** {modelo_tipo}")
 
+    # Si el modelo es un pipeline, extraer la última etapa (el modelo real)
+    if isinstance(modelo, Pipeline):
+        modelo_real = modelo.named_steps.get("reg")  # Extrae la etapa "reg" (el regresor)
+        scaler_usado = modelo.named_steps.get("scaler")
+    else:
+        modelo_real = modelo
+        scaler_usado = None
+
+    if modelo_real:
+        st.sidebar.write(f"🛠 **Modelo en uso:** {type(modelo_real).__name__}")
+    
+    if scaler_usado:
+        st.sidebar.write(f"⚖️ **Escalador aplicado:** {type(scaler_usado).__name__}")
+
     try:
-        # Obtener hiperparámetros del modelo
-        params = modelo.get_params()
+        params = modelo_real.get_params()  # Obtener hiperparámetros del modelo real
         st.sidebar.write("### 🔧 Hiperparámetros Ajustados:")
 
         # Diccionario con descripciones de los hiperparámetros más comunes
@@ -81,19 +94,18 @@ if modelo is not None:
             "learning_rate": "Velocidad de aprendizaje en modelos basados en boosting."
         }
 
-        # Mostrar hiperparámetros con explicaciones
         for key, value in params.items():
             explanation = hyperparam_descriptions.get(key, "Sin descripción disponible")
             st.sidebar.write(f"🔹 **{key}:** {value}")
-            st.sidebar.caption(f"📘 {explanation}")  # Muestra la explicación en letra pequeña
-    
+            st.sidebar.caption(f"📘 {explanation}")  
+
     except Exception as e:
         st.sidebar.error(f"⚠️ Error al obtener los hiperparámetros del modelo: {e}")
 
     # --- 📈 Mostrar coeficientes si están disponibles ---
     st.sidebar.write("### 📊 Coeficientes del Modelo:")
-    if hasattr(modelo, "coef_"):
-        coeficientes = modelo.coef_
+    if hasattr(modelo_real, "coef_"):
+        coeficientes = modelo_real.coef_
         st.sidebar.write(coeficientes)
     else:
         st.sidebar.warning("⚠️ Este modelo no tiene coeficientes disponibles.")
