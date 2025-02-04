@@ -54,22 +54,24 @@ st.write(
 
 # --- 📊 BARRA LATERAL: Información del modelo ---
 st.sidebar.header("📊 Parámetros del Modelo")
+
 if modelo is not None:
+    st.sidebar.write(f"📌 **Tipo de modelo:** {type(modelo).__name__}")  # Mostrar tipo de modelo
+
     try:
-        coeficientes = modelo.coef_
-        intercepto = modelo.intercept_
-
-        st.sidebar.write("### 📉 Coeficientes de las Variables")
-        for var, coef in zip(variables_info.keys(), coeficientes):
-            st.sidebar.write(f"**{var}:** {coef:.4f}")
-
-        st.sidebar.write(f"### 📍 Intercepto: {intercepto:.4f}")
-
-    except AttributeError:
-        st.sidebar.error("⚠️ No se pueden mostrar los coeficientes del modelo.")
-
+        # Verificar si es un modelo de Kernel Ridge
+        if isinstance(modelo, KernelRidge):
+            st.sidebar.write("### 🔧 Hiperparámetros Ajustados:")
+            st.sidebar.write(f"🔹 **Alpha:** {modelo.alpha}")
+            st.sidebar.write(f"🔹 **Kernel:** {modelo.kernel}")
+        else:
+            st.sidebar.warning("⚠️ Este modelo no tiene coeficientes disponibles.")
+    
+    except Exception as e:
+        st.sidebar.error(f"⚠️ Error al obtener los parámetros del modelo: {e}")
 else:
     st.sidebar.warning("⚠️ Modelo no cargado. No se pueden mostrar los parámetros.")
+
 
 # --- 📝 INPUTS DE VARIABLES ---
 valores_usuario = []
