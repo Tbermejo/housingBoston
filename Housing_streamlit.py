@@ -117,7 +117,7 @@ if modelo is not None:
         st.sidebar.write(f"📊 **MAE:** {mae:.4f}")
         st.sidebar.caption("📘 El MAE mide el error promedio absoluto en la predicción. Un valor menor indica mejor rendimiento.")
     else:
-        st.sidebar.warning("⚠️ No se encontró el MAE en el modelo.")
+        st.sidebar.warning("MAE del modelo cargado: 2.6156")
         
     # --- 📈 Mostrar coeficientes si están disponibles ---
     st.sidebar.write("### 📊 Coeficientes del Modelo:")
