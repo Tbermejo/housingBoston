@@ -44,7 +44,7 @@ variables_info = {
     "LSTAT": {"desc": "Porcentaje de población de bajos ingresos", "min": 1.0, "max": 40.0}
 }
 
-# Crear la interfaz en Streamlit
+# --- 🏡 INTERFAZ PRINCIPAL ---
 st.title("🏡 Predicción del Precio de Viviendas en Boston")
 
 st.write(
@@ -52,7 +52,26 @@ st.write(
     "Cada variable tiene un rango de valores basado en los datos originales del conjunto de datos."
 )
 
-# Crear inputs para cada variable con descripciones y rangos
+# --- 📊 BARRA LATERAL: Información del modelo ---
+st.sidebar.header("📊 Parámetros del Modelo")
+if modelo is not None:
+    try:
+        coeficientes = modelo.coef_
+        intercepto = modelo.intercept_
+
+        st.sidebar.write("### 📉 Coeficientes de las Variables")
+        for var, coef in zip(variables_info.keys(), coeficientes):
+            st.sidebar.write(f"**{var}:** {coef:.4f}")
+
+        st.sidebar.write(f"### 📍 Intercepto: {intercepto:.4f}")
+
+    except AttributeError:
+        st.sidebar.error("⚠️ No se pueden mostrar los coeficientes del modelo.")
+
+else:
+    st.sidebar.warning("⚠️ Modelo no cargado. No se pueden mostrar los parámetros.")
+
+# --- 📝 INPUTS DE VARIABLES ---
 valores_usuario = []
 for col, info in variables_info.items():
     if col == "CHAS":  # Variable categórica (0 o 1)
@@ -67,7 +86,7 @@ for col, info in variables_info.items():
     
     valores_usuario.append(valor)
 
-# Botón de predicción
+# --- 🔮 BOTÓN DE PREDICCIÓN ---
 if st.button("Predecir Precio"):
     if modelo is not None:
         entrada = np.array(valores_usuario).reshape(1, -1)
@@ -78,4 +97,3 @@ if st.button("Predecir Precio"):
             st.error(f"⚠️ Error al hacer la predicción: {e}")
     else:
         st.error("⚠️ No se pudo hacer la predicción porque el modelo no está cargado.")
-
