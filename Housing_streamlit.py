@@ -9,8 +9,8 @@ import pickle
 def load_model():
     filename = "model_trained_regressor.pkl.gz"
     with gzip.open(filename, 'rb') as f:
-        model = pickle.load(f)
-    return model
+        modelo = pickle.load(f)
+    return modelo
 
 # Definir los nombres de las variables del dataset
 column_names = [
