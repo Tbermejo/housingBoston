@@ -57,6 +57,7 @@ st.write(
     "Cada variable tiene un rango de valores basado en los datos originales del conjunto de datos."
 )
 
+
 # --- 📊 BARRA LATERAL: Información del modelo ---
 st.sidebar.header("📊 Parámetros del Modelo")
 
@@ -112,6 +113,7 @@ if modelo is not None:
 
 else:
     st.sidebar.warning("⚠️ Modelo no cargado. No se pueden mostrar los parámetros.")
+
 
 # --- 📝 INPUTS DE VARIABLES ---
 valores_usuario = []
