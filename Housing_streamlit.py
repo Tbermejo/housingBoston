@@ -75,9 +75,16 @@ if modelo is not None:
     except Exception as e:
         st.sidebar.error(f"⚠️ Error al obtener los hiperparámetros del modelo: {e}")
 
+    # --- 📈 Mostrar coeficientes si están disponibles ---
+    st.sidebar.write("### 📊 Coeficientes del Modelo:")
+    if hasattr(modelo, "coef_"):
+        coeficientes = modelo.coef_
+        st.sidebar.write(coeficientes)
+    else:
+        st.sidebar.warning("⚠️ Este modelo no tiene coeficientes disponibles.")
+
 else:
     st.sidebar.warning("⚠️ Modelo no cargado. No se pueden mostrar los parámetros.")
-
 
 # --- 📝 INPUTS DE VARIABLES ---
 valores_usuario = []
