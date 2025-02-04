@@ -6,9 +6,11 @@ import gzip
 import pickle
 
 # Cargar el modelo entrenado
-with open("model_trained_regressor.pkl.gz", "rb") as f:
-    modelo = pickle.load(f)
-return modelo
+def load_model():
+    filename = "model_trained_regressor.pkl.gz"
+    with gzip.open(filename, 'rb') as f:
+        model = pickle.load(f)
+    return model
 
 # Definir los nombres de las variables del dataset
 column_names = [
