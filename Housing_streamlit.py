@@ -12,7 +12,7 @@ from sklearn.pipeline import Pipeline
 # Función para cargar el modelo entrenado
 @st.cache_resource
 def load_model():
-    filename = "model_trained_regressor.pkl.gz"
+    filename = "model_trained_regressor (1).pkl.gz"
 
     if not os.path.exists(filename):
         st.error(f"⚠️ Error: No se encontró el archivo '{filename}'.")
@@ -31,6 +31,7 @@ def load_model():
 
 # Cargar el modelo al iniciar la aplicación
 modelo = load_model()
+mae = modelo_data.get("mae", "No disponible")  # Obtener MAE
 
 # Definir nombres, descripciones y rangos de las variables
 variables_info = {
@@ -103,6 +104,15 @@ if modelo is not None:
     except Exception as e:
         st.sidebar.error(f"⚠️ Error al obtener los hiperparámetros del modelo: {e}")
 
+
+    # Mostrar MAE en la barra lateral de Streamlit
+    st.sidebar.write("### 📏 Error Medio Absoluto (MAE):")
+    if isinstance(mae, (int, float)):  # Verifica si el MAE es numérico
+        st.sidebar.write(f"📊 **MAE:** {mae:.4f}")
+        st.sidebar.caption("📘 El MAE mide el error promedio absoluto en la predicción. Un valor menor indica mejor rendimiento.")
+    else:
+        st.sidebar.warning("⚠️ No se encontró el MAE en el modelo.")
+        
     # --- 📈 Mostrar coeficientes si están disponibles ---
     st.sidebar.write("### 📊 Coeficientes del Modelo:")
     if hasattr(modelo_real, "coef_"):
