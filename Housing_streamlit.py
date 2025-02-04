@@ -10,7 +10,8 @@ def load_model():
     return modelo
 
 
-variables_info = {
+# Definir los nombres de las variables del dataset
+column_names = [
     "CRIM": {"desc": "Tasa de criminalidad per cápita", "min": 0.0, "max": 100.0},
     "ZN": {"desc": "Proporción de terreno residencial", "min": 0.0, "max": 100.0},
     "INDUS": {"desc": "Proporción de terreno no comercial", "min": 0.0, "max": 30.0},
@@ -24,12 +25,6 @@ variables_info = {
     "PTRATIO": {"desc": "Ratio de alumnos por profesor", "min": 12.0, "max": 22.0},
     "B": {"desc": "Índice de población afroamericana", "min": 0.0, "max": 400.0},
     "LSTAT": {"desc": "Porcentaje de población de bajos ingresos", "min": 1.0, "max": 40.0}
-}
-
-# Definir los nombres de las variables del dataset
-column_names = [
-    "CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE", "DIS",
-    "RAD", "TAX", "PTRATIO", "B", "LSTAT"
 ]
 # Crear la interfaz en Streamlit
 st.title("Predicción del Precio de Viviendas en Boston 🏡")
