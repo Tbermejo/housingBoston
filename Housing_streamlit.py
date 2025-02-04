@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 from sklearn.pipeline import Pipeline
 
+
 # Función para cargar el modelo entrenado
 @st.cache_resource
 def load_model():
