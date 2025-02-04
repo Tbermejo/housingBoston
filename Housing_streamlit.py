@@ -3,8 +3,11 @@ import numpy as np
 import pickle  # Para cargar el modelo guardado
 
 # Cargar el modelo entrenado
-with open("model_trained_regressor.pkl.gz", "rb") as f:
-    modelo = pickle.load(f)
+def load_model():
+    filename = "model_trained_regressor.pkl.gz"
+    with gzip.open(filename, 'rb') as f:
+        modelo = pickle.load(f)
+    return modelo
 
 # Definir los nombres de las variables del dataset
 column_names = [
