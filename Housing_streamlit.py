@@ -3,6 +3,8 @@ import numpy as np
 import gzip
 import pickle
 import os
+from sklearn.kernel_ridge import KernelRidge
+
 
 # Función para cargar el modelo entrenado
 @st.cache_resource
