@@ -57,7 +57,6 @@ st.write(
     "Cada variable tiene un rango de valores basado en los datos originales del conjunto de datos."
 )
 
-
 # --- 📊 BARRA LATERAL: Información del modelo ---
 st.sidebar.header("📊 Parámetros del Modelo")
 
