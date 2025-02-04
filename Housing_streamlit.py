@@ -26,6 +26,11 @@ variables_info = {
     "LSTAT": {"desc": "Porcentaje de población de bajos ingresos", "min": 1.0, "max": 40.0}
 }
 
+# Definir los nombres de las variables del dataset
+column_names = [
+    "CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE", "DIS",
+    "RAD", "TAX", "PTRATIO", "B", "LSTAT"
+]
 # Crear la interfaz en Streamlit
 st.title("Predicción del Precio de Viviendas en Boston 🏡")
 
