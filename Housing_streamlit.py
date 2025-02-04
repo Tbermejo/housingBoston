@@ -32,8 +32,8 @@ def load_model():
 # Cargar el modelo y obtener el MAE
 modelo = load_model()
 if modelo is not None:
-    modelo = modelo_data["modelo"]
-    mae = modelo_data.get("mae", "No disponible")  # Obtener MAE
+    modelo = modelo["modelo"]
+    mae = modelo.get("mae", "No disponible")  # Obtener MAE
 
 # Definir nombres, descripciones y rangos de las variables
 variables_info = {
