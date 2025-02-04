@@ -31,7 +31,7 @@ def load_model():
 
 # Cargar el modelo al iniciar la aplicación
 modelo = load_model()
-mae = modelo_data.get("mae", "No disponible")  # Obtener MAE
+mae = modelo.get("mae", "No disponible")  # Obtener MAE
 
 # Definir nombres, descripciones y rangos de las variables
 variables_info = {
