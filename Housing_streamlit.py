@@ -57,6 +57,7 @@ st.write(
     "Cada variable tiene un rango de valores basado en los datos originales del conjunto de datos."
 )
 
+
 # --- 📊 BARRA LATERAL: Información del modelo ---
 st.sidebar.header("📊 Parámetros del Modelo")
 
@@ -68,9 +69,24 @@ if modelo is not None:
         # Obtener hiperparámetros del modelo
         params = modelo.get_params()
         st.sidebar.write("### 🔧 Hiperparámetros Ajustados:")
-        
+
+        # Diccionario con descripciones de los hiperparámetros más comunes
+        hyperparam_descriptions = {
+            "alpha": "Regularización: controla la penalización sobre los coeficientes.",
+            "l1_ratio": "Controla la mezcla entre L1 (Lasso) y L2 (Ridge) en ElasticNet.",
+            "kernel": "Función del núcleo utilizada en modelos Kernel.",
+            "C": "Inverso de la regularización en modelos como SVR (mayor = menos penalización).",
+            "gamma": "Parámetro del núcleo en modelos como SVR y Kernel Ridge.",
+            "n_estimators": "Número de árboles en modelos de Random Forest.",
+            "max_depth": "Profundidad máxima del árbol en Random Forest.",
+            "learning_rate": "Velocidad de aprendizaje en modelos basados en boosting."
+        }
+
+        # Mostrar hiperparámetros con explicaciones
         for key, value in params.items():
+            explanation = hyperparam_descriptions.get(key, "Sin descripción disponible")
             st.sidebar.write(f"🔹 **{key}:** {value}")
+            st.sidebar.caption(f"📘 {explanation}")  # Muestra la explicación en letra pequeña
     
     except Exception as e:
         st.sidebar.error(f"⚠️ Error al obtener los hiperparámetros del modelo: {e}")
