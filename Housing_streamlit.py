@@ -1,17 +1,34 @@
 import streamlit as st
 import numpy as np
-import pickle  # Para cargar el modelo guardado
+import gzip
+import pickle
+import os
 
-# Cargar el modelo entrenado
+# Función para cargar el modelo entrenado
+@st.cache_resource
 def load_model():
     filename = "model_trained_regressor.pkl.gz"
-    with gzip.open(filename, 'rb') as f:
-        modelo = pickle.load(f)
-    return modelo
 
+    if not os.path.exists(filename):
+        st.error(f"⚠️ Error: No se encontró el archivo '{filename}'.")
+        return None
+    
+    try:
+        with gzip.open(filename, 'rb') as f:
+            modelo = pickle.load(f)
+        if not hasattr(modelo, "predict"):
+            st.error("⚠️ El modelo cargado no es válido o no tiene el método 'predict()'.")
+            return None
+        return modelo
+    except Exception as e:
+        st.error(f"⚠️ Error al cargar el modelo: {e}")
+        return None
 
-# Definir los nombres de las variables del dataset
-column_names = [
+# Cargar el modelo al iniciar la aplicación
+modelo = load_model()
+
+# Definir nombres, descripciones y rangos de las variables
+variables_info = {
     "CRIM": {"desc": "Tasa de criminalidad per cápita", "min": 0.0, "max": 100.0},
     "ZN": {"desc": "Proporción de terreno residencial", "min": 0.0, "max": 100.0},
     "INDUS": {"desc": "Proporción de terreno no comercial", "min": 0.0, "max": 30.0},
@@ -25,24 +42,40 @@ column_names = [
     "PTRATIO": {"desc": "Ratio de alumnos por profesor", "min": 12.0, "max": 22.0},
     "B": {"desc": "Índice de población afroamericana", "min": 0.0, "max": 400.0},
     "LSTAT": {"desc": "Porcentaje de población de bajos ingresos", "min": 1.0, "max": 40.0}
-]
-# Crear la interfaz en Streamlit
-st.title("Predicción del Precio de Viviendas en Boston 🏡")
+}
 
-# Crear inputs para cada variable
+# Crear la interfaz en Streamlit
+st.title("🏡 Predicción del Precio de Viviendas en Boston")
+
+st.write(
+    "Ingrese los valores de cada variable para estimar el precio de una vivienda en Boston. "
+    "Cada variable tiene un rango de valores basado en los datos originales del conjunto de datos."
+)
+
+# Crear inputs para cada variable con descripciones y rangos
 valores_usuario = []
-for col in column_names:
+for col, info in variables_info.items():
     if col == "CHAS":  # Variable categórica (0 o 1)
-        valor = st.radio(f"{col} (Cerca del río Charles)", [0, 1])
+        valor = st.radio(f"{col} - {info['desc']}", [0, 1])
     else:
-        valor = st.number_input(f"{col}", min_value=0.0, format="%.2f")
+        valor = st.slider(
+            f"{col} - {info['desc']}",
+            min_value=float(info["min"]),
+            max_value=float(info["max"]),
+            value=(info["min"] + info["max"]) / 2
+        )
     
     valores_usuario.append(valor)
 
 # Botón de predicción
 if st.button("Predecir Precio"):
-    entrada = np.array(valores_usuario).reshape(1, -1)  # Convertir en array 2D
-    prediccion = modelo.predict(entrada)  # Hacer la predicción
-    st.success(f"🏠 Precio estimado: ${prediccion[0] * 1000:,.2f}")  # Formato en dólares
-
+    if modelo is not None:
+        entrada = np.array(valores_usuario).reshape(1, -1)
+        try:
+            prediccion = modelo.predict(entrada)  # Hacer la predicción
+            st.success(f"🏠 Precio estimado: ${prediccion[0] * 1000:,.2f}")  # Formato en dólares
+        except Exception as e:
+            st.error(f"⚠️ Error al hacer la predicción: {e}")
+    else:
+        st.error("⚠️ No se pudo hacer la predicción porque el modelo no está cargado.")
 
