@@ -8,6 +8,7 @@ import pickle
 # Cargar el modelo entrenado
 with open("model_trained_regressor.pkl.gz", "rb") as f:
     modelo = pickle.load(f)
+return modelo
 
 # Definir los nombres de las variables del dataset
 column_names = [
